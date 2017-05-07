@@ -4,14 +4,16 @@ app.controller("ContactCtrl", ContactCtrl);
 app.controller("HeaderCtrl", HeaderCtrl);
 app.controller("FooterCtrl", FooterCtrl);
 
-app.value("AppDataSvc", {
-    "name": "This is an app name",
-    version: 1
-});
+app.value("AppNameSvc", "This is an app name");
 
-app.value("LoggingSvc", function() {
-    console.log("Some loggin");
-});
+function prepareAppConfig(AppNameSvc) {
+    var value = {};
+    value.name = AppNameSvc;
+    value.builtDate = new Date().toDateString();
+    return value;
+};
+
+app.factory("AppDataFactorySvc", prepareAppConfig);
 
 function ContactCtrl() {
     this.contacts = [{
@@ -168,12 +170,11 @@ function ContactCtrl() {
     }
 }
 
-function HeaderCtrl(AppDataSvc, LoggingSvc) {
-    this.appTitle = AppDataSvc.name;
-    LoggingSvc();
+function HeaderCtrl(AppDataFactorySvc) {
+    this.appTitle = AppDataFactorySvc.name;
 }
 
-function FooterCtrl(AppDataSvc, LoggingSvc) {
-    this.appTitle = AppDataSvc.name;
-    LoggingSvc();
+function FooterCtrl(AppDataFactorySvc) {
+    this.appTitle = AppDataFactorySvc.name;
+    this.builtDate = AppDataFactorySvc.builtDate;
 }
